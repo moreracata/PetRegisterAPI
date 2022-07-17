@@ -21,7 +21,7 @@ namespace PetRegisterAPI.Models
         public virtual DbSet<Distrito> Distritos { get; set; } = null!;
         public virtual DbSet<Owner> Owners { get; set; } = null!;
         public virtual DbSet<Pet> Pets { get; set; } = null!;
-        public virtual DbSet<Provincium> Provincia { get; set; } = null!;
+        public virtual DbSet<Provincia> Provincia { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -214,7 +214,7 @@ namespace PetRegisterAPI.Models
                     .HasConstraintName("FK__Pet__OwnerId__35BCFE0A");
             });
 
-            modelBuilder.Entity<Provincium>(entity =>
+            modelBuilder.Entity<Provincia>(entity =>
             {
                 entity.Property(e => e.CreatedBy)
                     .HasMaxLength(100)

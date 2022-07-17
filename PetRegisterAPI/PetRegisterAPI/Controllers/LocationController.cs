@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetRegisterAPI.Repositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,6 +9,14 @@ namespace PetRegisterAPI.Controllers
     [ApiController]
     public class LocationController : ControllerBase
     {
+        private readonly IRepository repository;
+
+        public LocationController(IRepository rep)
+        {
+            repository = rep;
+        }
+
+
         // GET: api/<LocationController>
         [HttpGet]
         public IEnumerable<string> Get()

@@ -1,6 +1,16 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.EntityFrameworkCore;
+using PetRegisterAPI.Repositories;
+using Microsoft.Extensions.Configuration;
+using PetRegisterAPI.Models;
 
+var builder = WebApplication.CreateBuilder(args);
+var config = new ConfigurationBuilder()
+      .AddJsonFile("appsettings.json", optional: false)
+      .Build();
 // Add services to the container.
+builder.Services.AddTransient<IRepository, DataBaseRepository>();
+builder.Services.AddDbContext<PetRegisterContext>(options => options.UseSqlServer(config.GetConnectionString("defaultConnection")));
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
