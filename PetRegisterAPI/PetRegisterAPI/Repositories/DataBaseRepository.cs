@@ -23,6 +23,29 @@ namespace PetRegisterAPI.Repositories
             var petData = await context.Pets.FirstOrDefaultAsync(x => x.Id == id);
             return petData;
         }
+        
+        public async Task<List<Owner>> GetOwnerList() {
+            var ownerList = await context.Owners.ToListAsync();
+            return ownerList;
+        }
+
+        public async Task<Owner?> GetOwnerData(int id)
+        {
+            var ownertData = await context.Owners.FirstOrDefaultAsync(x => x.Id == id);
+            return ownertData;
+        }
+
+        public async Task<List<Category>> GetCategoryList()
+        {
+            var categoryList = await context.Categories.ToListAsync();
+            return categoryList;
+        }
+
+        public async Task<Category?> GetCategoryData(int id)
+        {
+            var categoryData = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            return categoryData;
+        }
 
 
     }

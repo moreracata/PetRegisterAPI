@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PetRegisterAPI.Models;
 using PetRegisterAPI.Repositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -18,16 +19,24 @@ namespace PetRegisterAPI.Controllers
 
         // GET: api/<CategoryController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<List<Category>> GetCategory()
         {
-            return new string[] { "value1", "value2" };
+            var result = await repository.GetCategoryList();
+            return result;
         }
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Category>> Get(int id)
         {
-            return "value";
+            var category = await repository.GetCategoryData(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return category;
         }
 
         // POST api/<CategoryController>
