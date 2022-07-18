@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using PetRegisterAPI.Models;
+using PetRegisterAPI.ModelsDTO;
 using PetRegisterAPI.Repositories;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -10,33 +12,44 @@ namespace PetRegisterAPI.Controllers
     [ApiController]
     public class OwnerController : ControllerBase
     {
-        private readonly IRepository repository;
-        public OwnerController(IRepository rep)
+        private readonly IRepository _repository;
+        private readonly ILogger<OwnerController> _logger;
+        private readonly IMapper _mapper;
+
+        public OwnerController(IRepository rep,
+                               ILogger<OwnerController> logger,
+                               IMapper mapper)
         {
-            repository = rep;
+            _repository = rep;
+            _logger = logger;
+            _mapper = mapper;
         }
+     
 
         // GET: api/<OwnerController>
         [HttpGet]
-        public async Task<List<Owner>> Get()
+        public async Task<List<OwnerDTO>> Get()
         {
-            var result = await repository.GetOwnerList();
-            return result;
+            var owners = await _repository.GetOwnerList();
+            var ownersDTO = _mapper.Map<List<OwnerDTO>>(owners);
+            return ownersDTO;
         }
 
 
         // GET api/<OwnerController>/5
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Owner>> Get(int id)
+        public async Task<ActionResult<OwnerDTO>> Get(int id)
         {
-            var owner = await repository.GetOwnerData(id);
+            var owner = await _repository.GetOwnerData(id);
+            var ownertDTO = _mapper.Map<OwnerDTO>(owner);
 
             if (owner == null)
             {
                 return NotFound();
             }
 
-            return owner;
+            return ownertDTO;
+
         }
 
         // POST api/<OwnerController>

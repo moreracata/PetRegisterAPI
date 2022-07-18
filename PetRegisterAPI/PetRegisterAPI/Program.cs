@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PetRegisterAPI.Repositories;
 using Microsoft.Extensions.Configuration;
 using PetRegisterAPI.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigurationBuilder()
@@ -9,7 +10,11 @@ var config = new ConfigurationBuilder()
       .Build();
 
 // Add services to the container.
-builder.Services.AddTransient<IRepository, DataBaseRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder.Services.AddResponseCaching();
+builder.Services.AddScoped<IRepository, DataBaseRepository>();
 builder.Services.AddDbContext<PetRegisterContext>(options => options.UseSqlServer(config.GetConnectionString("defaultConnection")));
 
 
@@ -29,7 +34,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.UseResponseCaching();
 
 app.MapControllers();
 

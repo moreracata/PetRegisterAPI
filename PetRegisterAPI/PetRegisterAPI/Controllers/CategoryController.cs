@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using PetRegisterAPI.Models;
 using PetRegisterAPI.Repositories;
 
@@ -10,33 +11,42 @@ namespace PetRegisterAPI.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly IRepository repository;
+        private readonly IRepository _repository;
+        private readonly ILogger<OwnerController> _logger;
+        private readonly IMapper _mapper;
 
-        public CategoryController(IRepository rep)
+        public CategoryController(IRepository rep,
+            ILogger<OwnerController> logger,
+            IMapper mapper)
         {
-            repository = rep;
+            _repository = rep;
+            _logger = logger;
+            _mapper = mapper;
         }
 
         // GET: api/<CategoryController>
         [HttpGet]
-        public async Task<List<Category>> GetCategory()
+        public async Task<List<CategoryDTO>> GetCategory()
         {
-            var result = await repository.GetCategoryList();
-            return result;
+            var caterories = await _repository.GetCategoryList();
+            var cateroriesDTO = _mapper.Map<List<CategoryDTO>>(caterories);
+            return cateroriesDTO;
         }
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> Get(int id)
+        public async Task<ActionResult<CategoryDTO>> Get(int id)
         {
-            var category = await repository.GetCategoryData(id);
+
+            var category = await _repository.GetCategoryData(id);
+            var categoryDTO = _mapper.Map<CategoryDTO>(category);
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            return category;
+            return categoryDTO;
         }
 
         // POST api/<CategoryController>
